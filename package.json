@@ -1,0 +1,16 @@
+{
+  "name": "html-emailer-server",
+  "version": "1.0.0",
+  "description": "Simple proxy server for HTML Emailer tool",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

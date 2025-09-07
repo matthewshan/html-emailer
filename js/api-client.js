@@ -2,7 +2,7 @@
 
 class ResendAPIClient {
     constructor() {
-        this.baseURL = 'https://api.resend.com';
+        this.baseURL = window.location.origin; // Use local server as proxy
         this.apiKey = null;
         this.fromEmail = null;
         this.fromName = null;
@@ -90,13 +90,15 @@ class ResendAPIClient {
         }
         
         try {
-            const response = await fetch(`${this.baseURL}/emails`, {
+            const response = await fetch(`${this.baseURL}/api/send-email`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${this.apiKey}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(emailData)
+                body: JSON.stringify({
+                    apiKey: this.apiKey,
+                    emailData: emailData
+                })
             });
             
             const responseData = await response.json();
