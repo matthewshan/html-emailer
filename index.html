@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;">
+    <title>HTML Email Tool</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Application Header -->
+        <header class="app-header">
+            <div>
+                <h1 class="app-title">HTML Email Tool</h1>
+                <p class="app-subtitle">HTML Emails Made Simple</p>
+            </div>
+            <div class="header-actions">
+                <button id="config-button" class="btn btn-secondary">
+                    ⚙️ Configure API
+                </button>
+                <button id="help-button" class="btn btn-primary">
+                    ❓ Help
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Template Manager Panel -->
+            <section class="panel template-manager">
+                <div class="panel-header">
+                    <h2 class="panel-title">Email Templates</h2>
+                    <p class="panel-description">Drag & drop HTML files to add email templates</p>
+                </div>
+
+                <!-- Drop Zone -->
+                <div id="drop-zone" class="drop-zone">
+                    <input type="file" id="file-input" class="file-input" multiple accept=".html,text/html" />
+                    <span class="drop-zone-icon">📁</span>
+                    <div class="drop-zone-text">Drop HTML files here</div>
+                    <div class="drop-zone-subtext">or click to browse files</div>
+                </div>
+
+                <!-- Template List -->
+                <div class="template-list" id="template-list">
+                    <div class="empty-preview text-center">
+                        <div class="empty-preview-icon">📧</div>
+                        <p><strong>No templates loaded</strong></p>
+                        <p>Drag HTML email templates above to get started</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email Preview Panel -->
+            <section class="panel email-preview-panel">
+                <div class="panel-header flex-between">
+                    <div>
+                        <h2 class="panel-title">Email Preview</h2>
+                        <p class="panel-description">Preview your selected email template</p>
+                    </div>
+                    <div id="template-counter" class="template-counter hidden">
+                        0 templates
+                    </div>
+                </div>
+
+                <!-- Preview Container -->
+                <div class="preview-container" id="preview-container">
+                    <div class="empty-preview">
+                        <div class="empty-preview-icon">👀</div>
+                        <p><strong>No template selected</strong></p>
+                        <p>Select a template from the left panel to preview</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Status Bar -->
+        <footer class="status-bar">
+            <div id="status-text">Ready to load email templates</div>
+            <div id="version-info">HTML Email Tool v0.0.1-beta</div>
+        </footer>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/utils.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/sanitizer.js"></script>
+    <script src="js/dropzone.js"></script>
+    <script src="js/preview.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
