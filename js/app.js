@@ -27,6 +27,7 @@ class EmailerApp {
         
         // Update initial UI state
         UIController.updateTemplateCounter();
+        UIController.updateSendButtonVisibility();
         UIController.updateStatus('Ready to load email templates');
         
         // Show welcome message
@@ -46,6 +47,7 @@ class EmailerApp {
             if (AppState.templates.size > 0) {
                 UIController.updateTemplateList();
                 UIController.updateTemplateCounter();
+                UIController.updateSendButtonVisibility();
                 NotificationManager.success(`Loaded ${AppState.templates.size} saved template(s)`);
             }
         } catch (error) {

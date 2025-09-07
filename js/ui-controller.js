@@ -72,6 +72,7 @@ class UIController {
         
         // Update UI
         this.updateTemplateList();
+        this.updateSendButtonVisibility();
         app.emailPreview.showTemplate(template);
         
         NotificationManager.info(`Selected template: ${template.name}`);
@@ -97,6 +98,7 @@ class UIController {
         if (AppState.selectedTemplate?.id === templateId) {
             AppState.selectedTemplate = null;
             app.emailPreview.showEmptyState();
+            this.updateSendButtonVisibility();
         }
         
         // Update UI
@@ -125,6 +127,16 @@ class UIController {
             statusText.innerHTML = `<span class="loading-spinner"></span>${message}`;
         } else {
             statusText.textContent = message;
+        }
+    }
+    
+    static updateSendButtonVisibility() {
+        const sendButton = document.getElementById('send-email-button');
+        
+        if (AppState.selectedTemplate && APIClient.isConfigured()) {
+            sendButton.classList.remove('hidden');
+        } else {
+            sendButton.classList.add('hidden');
         }
     }
 }

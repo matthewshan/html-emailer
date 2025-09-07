@@ -59,8 +59,13 @@
                         <h2 class="panel-title">Email Preview</h2>
                         <p class="panel-description">Preview your selected email template</p>
                     </div>
-                    <div id="template-counter" class="template-counter hidden">
-                        0 templates
+                    <div class="preview-actions">
+                        <div id="template-counter" class="template-counter hidden">
+                            0 templates
+                        </div>
+                        <button id="send-email-button" class="btn btn-primary hidden">
+                            📧 Send Email
+                        </button>
                     </div>
                 </div>
 
@@ -89,11 +94,79 @@
         </footer>
     </div>
 
+    <!-- API Configuration Modal -->
+    <div id="config-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>API Configuration</h3>
+                <button id="modal-close" class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="api-key">Resend API Key:</label>
+                    <input type="password" id="api-key" class="form-input" placeholder="Enter your Resend API key">
+                    <div class="form-help">
+                        Get your API key from <a href="https://resend.com/api-keys" target="_blank" rel="noopener">Resend Dashboard</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="from-email">From Email:</label>
+                    <input type="email" id="from-email" class="form-input" placeholder="noreply@yourdomain.com">
+                    <div class="form-help">
+                        Must be a verified domain in your Resend account
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="from-name">From Name (Optional):</label>
+                    <input type="text" id="from-name" class="form-input" placeholder="Your Company Name">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-config" class="btn btn-primary">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send Email Modal -->
+    <div id="send-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Send Email</h3>
+                <button id="send-modal-close" class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="to-emails">To (Recipients):</label>
+                    <textarea id="to-emails" class="form-input" rows="3" placeholder="email1@example.com&#10;email2@example.com&#10;email3@example.com"></textarea>
+                    <div class="form-help">
+                        Enter one email address per line
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email-subject">Subject:</label>
+                    <input type="text" id="email-subject" class="form-input" placeholder="Your email subject">
+                </div>
+                <div class="form-group">
+                    <label>Template:</label>
+                    <div id="selected-template-info" class="template-info">
+                        No template selected
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-send" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-send" class="btn btn-primary">Send Email</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Files -->
     <script src="js/utils.js"></script>
     <script src="js/notifications.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/sanitizer.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/modal-controller.js"></script>
     <script src="js/dropzone.js"></script>
     <script src="js/preview.js"></script>
     <script src="js/ui-controller.js"></script>
