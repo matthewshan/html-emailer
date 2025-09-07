@@ -84,6 +84,8 @@ class ModalController {
     
     // Show configuration modal
     showConfigModal() {
+        // Load current configuration when modal is shown
+        this.loadAPIConfiguration();
         this.configModal.classList.remove('hidden');
         document.getElementById('from-email').focus();
     }
@@ -146,7 +148,7 @@ class ModalController {
             saveButton.textContent = 'Saving...';
             saveButton.disabled = true;
             
-            APIClient.saveConfiguration(null, fromEmail, fromName);
+            APIClient.saveConfiguration(fromEmail, fromName);
             
             this.hideConfigModal();
             NotificationManager.success('API configuration saved successfully');
