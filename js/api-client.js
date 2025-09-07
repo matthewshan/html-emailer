@@ -2,7 +2,7 @@
 
 class ResendAPIClient {
     constructor() {
-        this.baseURL = window.location.origin; // Use local server as proxy
+        this.baseURL = window.location.origin;
         this.apiKey = null;
         this.fromEmail = null;
         this.fromName = null;
@@ -15,20 +15,19 @@ class ResendAPIClient {
         try {
             const config = TemplateStorage.getAPIConfig();
             if (config) {
-                this.apiKey = config.apiKey;
                 this.fromEmail = config.fromEmail;
                 this.fromName = config.fromName;
+                // API key is never loaded from storage
             }
         } catch (error) {
-            console.warn('Failed to load API configuration:', error);
+            console.warn('Failed to load Sender Info:', error);
         }
     }
     
     // Save configuration to localStorage
-    saveConfiguration(apiKey, fromEmail, fromName = '') {
+    saveConfiguration(fromEmail, fromName = '') {
         try {
             const config = {
-                apiKey: apiKey,
                 fromEmail: fromEmail,
                 fromName: fromName,
                 savedAt: new Date().toISOString()
@@ -36,21 +35,24 @@ class ResendAPIClient {
             
             TemplateStorage.saveAPIConfig(config);
             
-            this.apiKey = apiKey;
+            // Update instance variables (but don't store API key)
             this.fromEmail = fromEmail;
             this.fromName = fromName;
             
             return true;
         } catch (error) {
-            console.error('Failed to save API configuration:', error);
+            console.error('Failed to save Sender Info:', error);
             throw new Error('Failed to save configuration');
         }
     }
     
     // Send email
-    async sendEmail(toEmails, subject, htmlContent, templateName = null) {
-        if (!this.apiKey) {
-            throw new Error('API key is not configured');
+    async sendEmail(toEmails, subject, htmlContent, templateName = null, apiKey = null) {
+        // Use provided API key or fall back to stored one
+        const effectiveApiKey = apiKey || this.apiKey;
+        
+        if (!effectiveApiKey) {
+            throw new Error('API key is required');
         }
         
         if (!this.fromEmail) {
@@ -67,6 +69,11 @@ class ResendAPIClient {
         
         if (!htmlContent || htmlContent.trim() === '') {
             throw new Error('Email content is required');
+        }
+        
+        // Validate HTML content for JavaScript
+        if (TemplateSanitizer.hasJavaScript(htmlContent)) {
+            throw new Error('Email content contains JavaScript which is not allowed for security reasons');
         }
         
         // Prepare from field
@@ -96,7 +103,7 @@ class ResendAPIClient {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    apiKey: this.apiKey,
+                    apiKey: effectiveApiKey,
                     emailData: emailData
                 })
             });
@@ -165,7 +172,7 @@ class ResendAPIClient {
     
     // Check if API is configured
     isConfigured() {
-        return !!(this.apiKey && this.fromEmail);
+        return !!this.fromEmail;
     }
     
     // Clear configuration
@@ -177,7 +184,7 @@ class ResendAPIClient {
             this.fromName = null;
             return true;
         } catch (error) {
-            console.error('Failed to clear API configuration:', error);
+            console.error('Failed to clear Sender Information:', error);
             return false;
         }
     }

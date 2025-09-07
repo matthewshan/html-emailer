@@ -23,12 +23,12 @@ class NotificationManager {
         this.show(message, 'success');
     }
     
-    static error(message) {
-        this.show(message, 'error');
+    static error(message, duration = 8000) {
+        this.show(message, 'error', duration);
     }
     
-    static warning(message) {
-        this.show(message, 'warning');
+    static warning(message, duration = 6000) {
+        this.show(message, 'warning', duration);
     }
     
     static info(message) {

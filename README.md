@@ -10,17 +10,6 @@
 - Send emails via the Resend API
 - Secure API key handling via local proxy server
 
-## Prerequisites
-To use this application, you need:
-
-**Option 1: Docker (Recommended)**
-- Docker Desktop installed on your system
-- Download from [docker.com](https://www.docker.com/products/docker-desktop/)
-
-**Option 2: Node.js**
-- Node.js (version 14 or higher)
-- Download from [nodejs.org](https://nodejs.org/)
-
 **For sending emails:**
 1. **An HTML Email Template**
    - Prepare your email as a `.html` file (you can use any email template, or export from your favorite email builder).
@@ -30,24 +19,8 @@ To use this application, you need:
    - Create and verify your sending domain (for best deliverability)
    - Generate an API key from your Resend dashboard
 
-## Getting Started
 
-### Quick Setup with Docker (Recommended)
-
-1. Download or clone this repository
-2. Open a terminal/command prompt in the project folder
-3. Run: `docker-compose up --build`
-4. Open your browser to <http://localhost:3000>
-
-### Alternative: Node.js Setup
-
-1. Download or clone this repository
-2. Open a terminal/command prompt in the project folder
-3. Run: `npm install`
-4. Run: `npm start`
-5. Open your browser to <http://localhost:3000>
-
-### Using the Application
+## Using the Application
 1. Click "Configure API" and enter your Resend API key
 2. Drag your HTML email template(s) into the drop zone
 3. Enter recipient email addresses and a subject line

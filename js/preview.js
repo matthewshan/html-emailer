@@ -41,6 +41,12 @@ class EmailPreview {
         if (!this.iframe || !template) return;
         
         try {
+            // Additional security check before preview
+            if (TemplateSanitizer.hasJavaScript(template.content)) {
+                this.showErrorState('Template contains JavaScript and cannot be previewed for security reasons.');
+                return;
+            }
+            
             const previewHTML = `
                 <!DOCTYPE html>
                 <html>
@@ -98,6 +104,16 @@ class EmailPreview {
                 <div class="empty-preview-icon">❌</div>
                 <p><strong>Preview Error</strong></p>
                 <p>${message}</p>
+            </div>
+        `;
+    }
+    
+    showErrorState(message) {
+        this.container.innerHTML = `
+            <div class="empty-preview">
+                <div class="empty-preview-icon">🚫</div>
+                <p><strong>Security Error</strong></p>
+                <p>${escapeHtml(message)}</p>
             </div>
         `;
     }

@@ -9,7 +9,24 @@ class EmailerApp {
         this.initializeApp();
     }
     
+    clearStoredAPIKeys() {
+        // Remove any stored API keys for security
+        try {
+            const config = TemplateStorage.getAPIConfig();
+            if (config && config.apiKey) {
+                delete config.apiKey;
+                TemplateStorage.saveAPIConfig(config);
+                console.log('Cleared stored API key for security');
+            }
+        } catch (error) {
+            console.warn('Failed to clear stored API keys:', error);
+        }
+    }
+    
     initializeApp() {
+        // Clear any stored API keys for security
+        this.clearStoredAPIKeys();
+        
         // Initialize drop zone
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
@@ -56,52 +73,17 @@ class EmailerApp {
     }
     
     bindEventListeners() {
-        // Configuration button
-        document.getElementById('config-button').addEventListener('click', () => {
-            NotificationManager.info('Configuration panel coming in Phase 2!');
-        });
-        
-        // Help button
-        document.getElementById('help-button').addEventListener('click', () => {
-            this.showHelp();
-        });
-        
+       
         // Global error handling
         window.addEventListener('error', (event) => {
             console.error('Global error:', event.error);
             NotificationManager.error('An unexpected error occurred');
         });
     }
-    
-    showHelp() {
-        const helpMessage = `
-HTML Emailer Tool- Phase 1
-
-How to use:
-1. Drag & drop HTML email template files into the drop zone
-2. Click on a template card to select and preview it
-3. Use the preview panel to see how your email will look
-
-Features in this version:
-✅ Drag & drop template loading
-✅ Template storage and management
-✅ Email preview
-✅ Template validation and sanitization
-
-Coming in future phases:
-📧 Email composition and sending
-⚙️ API configuration
-📊 Batch email management
-        `.trim();
-        
-        alert(helpMessage);
-    }
 }
 
 // Initialize Application
-let app;
-
-document.addEventListener('DOMContentLoaded', () => {
+let app;document.addEventListener('DOMContentLoaded', () => {
     app = new EmailerApp();
 });
 

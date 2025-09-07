@@ -8,3 +8,8 @@ README.md
 coverage
 .DS_Store
 *.log
+
+docker-compose.yml
+templates/
+ai-context/
+.github/

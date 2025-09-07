@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.resend.com;">
     <title>HTML Email Tool</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
     <div class="app-container">
@@ -16,8 +17,11 @@
                 <p class="app-subtitle">HTML Emails Made Simple</p>
             </div>
             <div class="header-actions">
+                <a href="https://resend.com/" target="_blank" rel="noopener" class="btn btn-secondary">
+                    🌐 Resend.com
+                </a>
                 <button id="config-button" class="btn btn-secondary">
-                    ⚙️ Configure API
+                    ⚙️ Configure Sender Info
                 </button>
                 <button id="help-button" class="btn btn-primary">
                     ❓ Help
@@ -39,7 +43,7 @@
                     <input type="file" id="file-input" class="file-input" multiple accept=".html,text/html" />
                     <span class="drop-zone-icon">📁</span>
                     <div class="drop-zone-text">Drop HTML files here</div>
-                    <div class="drop-zone-subtext">or click to browse files</div>
+                    <div class="drop-zone-subtext">or click to browse files (.html only)</div>
                 </div>
 
                 <!-- Template List -->
@@ -85,7 +89,7 @@
             <div id="footer-info">
                 <div class="legal-info">
                     <span class="license">License: This project is licensed under the <a href="LICENSE" target="_blank" rel="noopener">MIT License</a>.</span>
-                    <span class="disclaimer">Disclaimer: The author is not responsible for any content you upload, send, or generate using this tool, nor for any usage of the Resend API or any other third-party service. Use at your own risk.</span>
+                    <span class="disclaimer">Disclaimer: The project author is not responsible for any content you upload, send, or generate using this tool, nor for any usage of the Resend API or any other third-party service. Use at your own risk.</span>
                     <span class="github-link">GitHub: <a href="https://github.com/matthewshan/html-emailer" target="_blank" rel="noopener">View on GitHub</a></span>
                 </div>
             </div>
@@ -93,31 +97,24 @@
         </footer>
     </div>
 
-    <!-- API Configuration Modal -->
+    <!-- Sender Info Modal -->
     <div id="config-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>API Configuration</h3>
+                <h3>Sender Information</h3>
                 <button id="modal-close" class="modal-close">×</button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="api-key">Resend API Key:</label>
-                    <input type="password" id="api-key" class="form-input" placeholder="Enter your Resend API key">
-                    <div class="form-help">
-                        Get your API key from <a href="https://resend.com/api-keys" target="_blank" rel="noopener">Resend Dashboard</a>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="from-email">From Email:</label>
-                    <input type="email" id="from-email" class="form-input" placeholder="noreply@resend.dev" value="noreply@resend.dev">
+                    <input type="email" id="from-email" class="form-input" placeholder="noreply@resend.dev" value="noreply@resend.dev" autocomplete="email">
                     <div class="form-help">
                         Must be a verified domain in your Resend account
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="from-name">From Name (Optional):</label>
-                    <input type="text" id="from-name" class="form-input" placeholder="Your Company Name">
+                    <input type="text" id="from-name" class="form-input" placeholder="Your Company Name" autocomplete="organization">
                 </div>
             </div>
             <div class="modal-footer">
@@ -135,15 +132,25 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
+                    <label for="send-api-key">Resend API Key:</label>
+                    <input type="password" id="send-api-key" class="form-input" placeholder="Enter your Resend API key" 
+                           autocomplete="new-password" 
+                           data-lpignore="false"
+                           name="resend-api-key">
+                    <div class="form-help">
+                        Get your API key from <a href="https://resend.com/api-keys" target="_blank" rel="noopener">Resend Dashboard</a>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="to-emails">To (Recipients):</label>
-                    <textarea id="to-emails" class="form-input" rows="3" placeholder="email1@example.com&#10;email2@example.com&#10;email3@example.com"></textarea>
+                    <textarea id="to-emails" class="form-input" rows="3" placeholder="email1@example.com&#10;email2@example.com&#10;email3@example.com" autocomplete="off"></textarea>
                     <div class="form-help">
                         Enter one email address per line
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="email-subject">Subject:</label>
-                    <input type="text" id="email-subject" class="form-input" placeholder="Your email subject">
+                    <input type="text" id="email-subject" class="form-input" placeholder="Your email subject" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label>Template:</label>
@@ -155,6 +162,42 @@
             <div class="modal-footer">
                 <button id="cancel-send" class="btn btn-secondary">Cancel</button>
                 <button id="confirm-send" class="btn btn-primary">Send Email</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>How to Use HTML Emailer</h3>
+                <button id="help-modal-close" class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h4>1. Prepare your email as a <code>.html</code> file on your computer</h4>
+                    <p><strong>Important:</strong> Only HTML files without JavaScript are allowed for security reasons.</p>
+                </div>
+                
+                <div class="help-section">
+                    <h4>2. Create a Resend Account & API Key</h4>
+                    <ul>
+                        <li>Sign up at <a href="https://resend.com/" target="_blank" rel="noopener">resend.com</a></li>
+                        <li>Create and verify your sending <a href="https://resend.com/domains" target="_blank" rel="noopener">domain</a> (for best deliverability)</li>
+                        <li>Generate an <a href="https://resend.com/api-keys" target="_blank" rel="noopener">API key with permissions to send emails</a>. Copy this and store it in a secure location.</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h4>3. Sending Emails</h4>
+                    <ul>
+                        <li><strong>From email</strong> should be either "someemail@resend.dev" or "someemail@yourverifieddomain.com". Domain name MUST be verified or else it will fail</li>
+                        <li><strong>Resend API Key</strong> will be requested when sending emails for security</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="help-modal-ok" class="btn btn-primary">Got it!</button>
             </div>
         </div>
     </div>

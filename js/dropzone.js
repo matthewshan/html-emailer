@@ -52,7 +52,17 @@ class DropZoneManager {
     async handleDrop(e) {
         const dt = e.dataTransfer;
         const files = Array.from(dt.files);
-        await this.processFiles(files);
+        
+        // Pre-filter files by extension before processing
+        const nonHTMLFiles = files.filter(file => !file.name.toLowerCase().endsWith('.html'));
+        if (nonHTMLFiles.length > 0) {
+            NotificationManager.warning(`Skipping ${nonHTMLFiles.length} non-HTML file(s). Only .html files are accepted.`);
+        }
+        
+        const htmlFiles = files.filter(file => file.name.toLowerCase().endsWith('.html'));
+        if (htmlFiles.length > 0) {
+            await this.processFiles(htmlFiles);
+        }
     }
     
     async handleFileSelect(e) {
@@ -63,12 +73,15 @@ class DropZoneManager {
     }
     
     async processFiles(files) {
-        const htmlFiles = files.filter(file => 
-            file.type === 'text/html' || file.name.toLowerCase().endsWith('.html')
-        );
+        // Filter for HTML files only - check both MIME type and extension
+        const htmlFiles = files.filter(file => {
+            const isHTMLMime = file.type === 'text/html' || file.type === '';
+            const isHTMLExtension = file.name.toLowerCase().endsWith('.html');
+            return isHTMLMime && isHTMLExtension;
+        });
         
         if (htmlFiles.length === 0) {
-            NotificationManager.warning('Please select HTML files only');
+            NotificationManager.warning('Please select HTML files only (.html extension required)');
             return;
         }
         
@@ -88,6 +101,11 @@ class DropZoneManager {
                 successCount++;
             } catch (error) {
                 console.error('Failed to process template:', file.name, error);
+                
+                // Show specific error reason for each failed file
+                const fileName = file.name.replace(/[<>&"']/g, ''); // Sanitize filename for display
+                NotificationManager.error(`${fileName}: ${error.message}`);
+                
                 errorCount++;
             }
         }
@@ -100,16 +118,15 @@ class DropZoneManager {
             UIController.updateTemplateCounter();
         }
         
-        if (errorCount > 0) {
-            NotificationManager.error(`Failed to load ${errorCount} template(s)`);
-        }
+        // Individual error messages are now shown for each failed file
+        // No need for a generic error count message
     }
     
     async processTemplate(file) {
         try {
             // Validate file size first (before reading content)
             if (file.size > 1024 * 1024) {
-                throw new Error('File too large (max 1MB)');
+                throw new Error('File too large (maximum 1MB allowed)');
             }
             
             // Validate filename for security
@@ -123,7 +140,8 @@ class DropZoneManager {
             // Validate and sanitize content
             const validation = TemplateSanitizer.validateTemplate(content);
             if (!validation.isValid) {
-                throw new Error('Invalid HTML template');
+                const errorMsg = validation.error || 'Invalid HTML template structure';
+                throw new Error(errorMsg);
             }
             
             const preview = TemplateSanitizer.generatePreview(content);

@@ -4,12 +4,14 @@ class ModalController {
     constructor() {
         this.configModal = document.getElementById('config-modal');
         this.sendModal = document.getElementById('send-modal');
+        this.helpModal = document.getElementById('help-modal');
         
         this.initializeConfigModal();
         this.initializeSendModal();
+        this.initializeHelpModal();
     }
     
-    // Initialize API Configuration Modal
+    // Initialize Configuration Modal
     initializeConfigModal() {
         const configButton = document.getElementById('config-button');
         const modalClose = document.getElementById('modal-close');
@@ -17,7 +19,6 @@ class ModalController {
         const saveConfigButton = document.getElementById('save-config');
         
         // Form inputs
-        const apiKeyInput = document.getElementById('api-key');
         const fromEmailInput = document.getElementById('from-email');
         const fromNameInput = document.getElementById('from-name');
         
@@ -76,7 +77,6 @@ class ModalController {
     loadAPIConfiguration() {
         const config = TemplateStorage.getAPIConfig();
         if (config) {
-            document.getElementById('api-key').value = config.apiKey || '';
             document.getElementById('from-email').value = config.fromEmail || '';
             document.getElementById('from-name').value = config.fromName || '';
         }
@@ -85,7 +85,7 @@ class ModalController {
     // Show configuration modal
     showConfigModal() {
         this.configModal.classList.remove('hidden');
-        document.getElementById('api-key').focus();
+        document.getElementById('from-email').focus();
     }
     
     // Hide configuration modal
@@ -119,19 +119,15 @@ class ModalController {
     hideSendModal() {
         this.sendModal.classList.add('hidden');
         this.clearSendFormErrors();
+        // Clear API key for security
+        document.getElementById('send-api-key').value = '';
     }
     
     // Save API configuration
     async saveAPIConfiguration() {
-        const apiKey = document.getElementById('api-key').value.trim();
         const fromEmail = document.getElementById('from-email').value.trim();
         const fromName = document.getElementById('from-name').value.trim();
         const saveButton = document.getElementById('save-config');
-        
-        if (!apiKey) {
-            this.showFieldError('api-key', 'API key is required');
-            return;
-        }
         
         if (!fromEmail) {
             this.showFieldError('from-email', 'From email is required');
@@ -150,14 +146,14 @@ class ModalController {
             saveButton.textContent = 'Saving...';
             saveButton.disabled = true;
             
-            APIClient.saveConfiguration(apiKey, fromEmail, fromName);
+            APIClient.saveConfiguration(null, fromEmail, fromName);
             
             this.hideConfigModal();
             NotificationManager.success('API configuration saved successfully');
             UIController.updateSendButtonVisibility();
             
         } catch (error) {
-            this.showFieldError('api-key', error.message);
+            this.showFieldError('from-email', error.message);
             NotificationManager.error(`Failed to save configuration: ${error.message}`);
         } finally {
             saveButton.textContent = 'Save Configuration';
@@ -167,9 +163,15 @@ class ModalController {
     
     // Send email
     async sendEmail() {
+        const apiKey = document.getElementById('send-api-key').value.trim();
         const toEmailsText = document.getElementById('to-emails').value.trim();
         const subject = document.getElementById('email-subject').value.trim();
         const confirmButton = document.getElementById('confirm-send');
+        
+        if (!apiKey) {
+            this.showFieldError('send-api-key', 'API key is required');
+            return;
+        }
         
         if (!toEmailsText) {
             this.showFieldError('to-emails', 'At least one recipient is required');
@@ -209,7 +211,8 @@ class ModalController {
                 emailValidation.valid,
                 subject,
                 templateContent,
-                templateName
+                templateName,
+                apiKey
             );
             
             // Save to send history
@@ -282,7 +285,7 @@ class ModalController {
     
     // Clear configuration form errors
     clearConfigFormErrors() {
-        const fields = ['api-key', 'from-email', 'from-name'];
+        const fields = ['from-email', 'from-name'];
         fields.forEach(fieldId => {
             const field = document.getElementById(fieldId);
             field.classList.remove('error');
@@ -295,13 +298,51 @@ class ModalController {
     
     // Clear send form errors
     clearSendFormErrors() {
-        const fields = ['to-emails', 'email-subject'];
+        const fields = ['send-api-key', 'to-emails', 'email-subject'];
         fields.forEach(fieldId => {
             const field = document.getElementById(fieldId);
             field.classList.remove('error');
             const errorMsg = field.parentNode.querySelector('.error-message');
             if (errorMsg) errorMsg.remove();
         });
+    }
+
+    // Initialize Help Modal
+    initializeHelpModal() {
+        const helpButton = document.getElementById('help-button');
+        const helpModalClose = document.getElementById('help-modal-close');
+        const helpModalOk = document.getElementById('help-modal-ok');
+        
+        // Event listeners
+        helpButton.addEventListener('click', () => this.showHelpModal());
+        helpModalClose.addEventListener('click', () => this.hideHelpModal());
+        helpModalOk.addEventListener('click', () => this.hideHelpModal());
+        
+        // Close modal when clicking outside
+        this.helpModal.addEventListener('click', (e) => {
+            if (e.target === this.helpModal) {
+                this.hideHelpModal();
+            }
+        });
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !this.helpModal.classList.contains('hidden')) {
+                this.hideHelpModal();
+            }
+        });
+    }
+
+    // Show Help Modal
+    showHelpModal() {
+        this.helpModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    // Hide Help Modal
+    hideHelpModal() {
+        this.helpModal.classList.add('hidden');
+        document.body.style.overflow = ''; // Restore scrolling
     }
 }
 
