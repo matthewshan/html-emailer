@@ -344,11 +344,6 @@ body {
     gap: 8px;
 }
 
-.footer-text {
-    font-weight: 500;
-    color: var(--primary);
-}
-
 .legal-info {
     display: flex;
     flex-direction: column;
@@ -376,22 +371,6 @@ body {
     color: var(--dark);
     opacity: 0.6;
     white-space: nowrap;
-}
-
-.loading-spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--light);
-    border-top: 2px solid var(--secondary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    display: inline-block;
-    margin-right: 8px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 .notification {

@@ -78,7 +78,6 @@ class DropZoneManager {
         }
         
         AppState.isLoading = true;
-        UIController.updateStatus('Loading templates...');
         
         let successCount = 0;
         let errorCount = 0;
@@ -104,8 +103,6 @@ class DropZoneManager {
         if (errorCount > 0) {
             NotificationManager.error(`Failed to load ${errorCount} template(s)`);
         }
-        
-        UIController.updateStatus('Ready');
     }
     
     async processTemplate(file) {

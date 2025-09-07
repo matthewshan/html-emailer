@@ -28,7 +28,6 @@ class EmailerApp {
         // Update initial UI state
         UIController.updateTemplateCounter();
         UIController.updateSendButtonVisibility();
-        UIController.updateStatus('Ready to load email templates');
         
         // Show welcome message
         setTimeout(() => {

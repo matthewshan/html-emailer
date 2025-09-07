@@ -120,16 +120,6 @@ class UIController {
         }
     }
     
-    static updateStatus(message, isLoading = false) {
-        const statusText = document.getElementById('status-text');
-        
-        if (isLoading) {
-            statusText.innerHTML = `<span class="loading-spinner"></span>${message}`;
-        } else {
-            statusText.textContent = message;
-        }
-    }
-    
     static updateSendButtonVisibility() {
         const sendButton = document.getElementById('send-email-button');
         
