@@ -1,6 +1,6 @@
 {
   "name": "html-emailer-server",
-  "version": "v0.1.1-beta",
+  "version": "v0.1.2-beta",
   "description": "Simple proxy server for HTML Emailer tool",
   "main": "server.js",
   "scripts": {
